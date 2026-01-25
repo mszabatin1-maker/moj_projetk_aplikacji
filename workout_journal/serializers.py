@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book, Author, Genre, MONTHS, BOOK_FORMATS, Osoba, Stanowisko
+from .models import MONTHS, Podopieczny, Stanowisko
 from rest_framework.validators import UniqueTogetherValidator
 # class BookSerializer (serializers.Serializer):
 #     id = serializers.IntegerField(read_only = True)
@@ -28,19 +28,6 @@ from rest_framework.validators import UniqueTogetherValidator
 #         instance.available_copies = validated_data.get('available_copies', instance.available_copies)
 #         instance.save()
 #         return instance
-class BookSerializer (serializers.ModelSerializer):
-    class Meta:
-        model = Book
-
-        field = ['id', 'title', 'publication_month', 'book_format', 'author', 'genre', 'available_copies']
-
-        read_only_fields = ['id']
-        
-        def validate_title(self, value):
-            if not value.istitle():
-                raise serializers.ValidationError("Tytuł książki powinien rozpoczynać się wielką literą!")
-            return value
-        
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
@@ -85,16 +72,9 @@ def multiple_of_two(value):
     if value % 2 != 0:
         raise serializers.ValidationError("Ocena popularności musi być wielokrotnością 2 (np. 0, 2, 4, 6, 8, 10).")
     
-class GenreSerializer(serializers.ModelSerializer):
-    popularity_rank = serializers.IntegerField(validators=[multiple_of_two])
-    
+class PodopiecznySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Genre
-        fields = "__all__"
-
-class OsobaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Osoba
+        model = Podopieczny
         fields = "__all__"
         
     def validate_imie(self, value):
