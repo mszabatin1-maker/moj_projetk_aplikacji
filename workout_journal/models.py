@@ -51,12 +51,15 @@ class Trener(models.Model):
     imie = models.CharField(max_length=50, blank = False, null = False)
     nazwisko = models.CharField(max_length=100, blank = False, null = False)
     data_dodania = models.DateField(auto_now_add = True, editable = False)
-    stanowisko = models.ForeignKey('Stanowisko', on_delete=models.CASCADE)
+    specjalizacja = models.ForeignKey('Specjalizacja', on_delete=models.CASCADE)
     # plan_treningowy = models.ForeignKey('PlanTreningowy', on_delete=models.CASCADE)
     # cwiczenie = models.ForeignKey('PlanTreningowy',on_delete=models.SET_NULL, null=True, blank=True)
 
 
-class Stanowisko(models.Model):
+class Specjalizacja(models.Model):
     nazwa = models.CharField(max_length = 70, blank = False, null = False)
     opis = models.TextField(blank = True, null = True)
+
+    def __str__(self):
+        return f"{self.nazwa}"
 

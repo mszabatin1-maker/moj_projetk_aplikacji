@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MONTHS, Podopieczny, Stanowisko
+from .models import MONTHS, Podopieczny, Specjalizacja, Trener
 from rest_framework.validators import UniqueTogetherValidator
 # class BookSerializer (serializers.Serializer):
 #     id = serializers.IntegerField(read_only = True)
@@ -28,14 +28,14 @@ from rest_framework.validators import UniqueTogetherValidator
 #         instance.available_copies = validated_data.get('available_copies', instance.available_copies)
 #         instance.save()
 #         return instance
-class AuthorSerializer(serializers.ModelSerializer):
+class TrenerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Author
+        model = Trener
         fields = '__all__'
         
         validators = [
             UniqueTogetherValidator(
-                queryset=Author.objects.all(),
+                queryset=Trener.objects.all(),
                 fields=['first_name', 'last_name']
             )
         ]
@@ -47,7 +47,6 @@ class AuthorSerializer(serializers.ModelSerializer):
         """
         first_name = data.get('first_name')
         last_name = data.get('last_name')
-        country = data.get('country')
 
         # Imię i nazwisko powinny zaczynać się wielką literą
         if first_name and not first_name.istitle():
@@ -60,17 +59,7 @@ class AuthorSerializer(serializers.ModelSerializer):
                 {"last_name": "Nazwisko powinno rozpoczynać się wielką literą!"}
             )
 
-        # Kod kraju: dokładnie 2 wielkie litery
-        if country and (len(country) != 2 or not country.isupper()):
-            raise serializers.ValidationError(
-                {"country": "Kod kraju musi składać się z 2 wielkich liter, np. 'PL'."}
-            )
-
         return data
-    
-def multiple_of_two(value):
-    if value % 2 != 0:
-        raise serializers.ValidationError("Ocena popularności musi być wielokrotnością 2 (np. 0, 2, 4, 6, 8, 10).")
     
 class PodopiecznySerializer(serializers.ModelSerializer):
     class Meta:
@@ -91,7 +80,7 @@ class PodopiecznySerializer(serializers.ModelSerializer):
             )
         return value
     
-class StanowiskoSerializer(serializers.ModelSerializer):
+class SpecjalizacjaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Stanowisko
+        model = Specjalizacja
         fields = "__all__"
