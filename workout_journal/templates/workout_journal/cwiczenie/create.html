@@ -1,0 +1,37 @@
+{% extends "workout_journal\base.html" %} {% block title %}Dodaj nowe
+ćwiczenie{% endblock %} {% block content %}
+<h1>Dodaj nowe ćwiczenie</h1>
+
+{% if error %}
+<p style="color: red">{{ error }}</p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  <label for="cwiczenie">Ćwiczenie:</label>
+  <input type="text" id="nazwa" name="nazwa" /><br /><br />
+
+  <label for="opis_cwiczenia">Opis:</label>
+  <input type="text" id="opis_cwiczenia" name="opis_cwiczenia" /><br /><br />
+
+  <label for="ilosc_powtorzen">Ilość powtórzeń:</label>
+  <input
+    type="number"
+    id="ilosc_powtorzen"
+    name="ilosc_powtorzen"
+  /><br /><br />
+
+  <label for="ilosc_serii">Ilość serii:</label>
+  <input type="number" id="ilosc_serii" name="ilosc_serii" /><br /><br />
+
+  <label for="planTreningowy">Plan treningowy:</label>
+  <select id="planTreningowy" name="planTreningowy" multiple>
+    {% for p in planyTreningowe %}
+    <option value="{{ p.id }}">{{ p.nazwa }}</option>
+    {% endfor %}
+  </select>
+  <br /><br />
+
+  <button type="submit">Zapisz</button>
+</form>
+{% endblock %}

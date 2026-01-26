@@ -1,0 +1,11 @@
+{% extends "workout_journal\base.html" %} {% block title %}Lista obiektów
+Ćwiczenie{% endblock %} {% block content %} Aktualnie w mojej bazie dodane są
+poniższe obiekty Ćwiczenie. {% for cwiczenie in cwiczenia %}
+<p>ćwiczenie: {{ cwiczenie.nazwa }}</p>
+<p>Opis ćwiczenia: {{ cwiczenie.opis_cwiczenia }}</p>
+<p>
+  Ilość powtórzeń x ilość serii: {{cwiczenie.ilosc_powtorzen}} x
+  {{cwiczenie.ilosc_serii}}
+</p>
+<hr />
+{% endfor %} {% endblock %}

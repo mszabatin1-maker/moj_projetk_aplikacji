@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Lista wyboru miesięcy wydania
 MONTHS = models.IntegerChoices(
@@ -12,6 +13,17 @@ PLCIE = models.IntegerChoices(
 )
     
 
+class Trener(models.Model):
+    imie = models.CharField(max_length=50, blank = False, null = False)
+    nazwisko = models.CharField(max_length=100, blank = False, null = False)
+    data_dodania = models.DateField(auto_now_add = True, editable = False)
+    specjalizacja = models.ForeignKey('Specjalizacja', on_delete=models.CASCADE)
+    wlasciciel = models.ForeignKey(User, on_delete=models.SET_NULL, null = True, default = 1)
+    # plan_treningowy = models.ForeignKey('PlanTreningowy', on_delete=models.CASCADE)
+    # cwiczenie = models.ForeignKey('PlanTreningowy',on_delete=models.SET_NULL, null=True, blank=True)
+    def __str__(self):
+        return f"Trener: {self.imie} {self.nazwisko}"
+
 class Podopieczny(models.Model):
     PLEC_WYBOR = (
         ("K", "kobieta"),
@@ -21,6 +33,7 @@ class Podopieczny(models.Model):
     imie = models.CharField(max_length=50, blank = False, null = False)
     nazwisko = models.CharField(max_length=100, blank = False, null = False)
     plec = models.IntegerField(choices=PLCIE.choices, default=PLCIE.Inna)
+    trener = models.ForeignKey(Trener, null = True, blank = True, on_delete = models.SET_NULL)
     plan_treningowy = models.ManyToManyField('PlanTreningowy')
     data_dodania = models.DateField(auto_now_add = True, editable = False)
 
@@ -35,7 +48,7 @@ class Cwiczenie(models.Model):
     opis_cwiczenia = models.TextField(blank = True, null = True)
     ilosc_powtorzen = models.IntegerField()
     ilosc_serii = models.IntegerField()
-    dodaj_do_plan_treningowy = models.ManyToManyField('PlanTreningowy')   
+    # dodaj_do_plan_treningowy = models.ManyToManyField('PlanTreningowy')   
 
     def __str__(self):
         return f"{self.nazwa}"
@@ -46,14 +59,6 @@ class PlanTreningowy(models.Model):
 
     def __str__(self):
         return f"{self.nazwa}"
-
-class Trener(models.Model):
-    imie = models.CharField(max_length=50, blank = False, null = False)
-    nazwisko = models.CharField(max_length=100, blank = False, null = False)
-    data_dodania = models.DateField(auto_now_add = True, editable = False)
-    specjalizacja = models.ForeignKey('Specjalizacja', on_delete=models.CASCADE)
-    # plan_treningowy = models.ForeignKey('PlanTreningowy', on_delete=models.CASCADE)
-    # cwiczenie = models.ForeignKey('PlanTreningowy',on_delete=models.SET_NULL, null=True, blank=True)
 
 
 class Specjalizacja(models.Model):

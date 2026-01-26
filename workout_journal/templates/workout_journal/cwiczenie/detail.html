@@ -1,0 +1,19 @@
+{% extends "workout_journal\base.html" %} {% block title %}{{cwiczenie.nazwa }}
+{% endblock %} {% block content %}
+<p>Ćwiczenie: {{cwiczenie.nazwa }}</p>
+<p>Opis: {{cwiczenie.opis_cwiczenia}}</p>
+<p>
+  Ilość powtórzeń x ilość serii {{cwiczenie.ilosc_powtorzen}} x
+  {{cwiczenie.ilosc_serii}}
+</p>
+<form method="post">
+  {% csrf_token %}
+  <button
+    type="submit"
+    onclick="return confirm('Czy na pewno chcesz usunąć to ćwiczenie?');"
+  >
+    Usuń ćwiczenie
+  </button>
+</form>
+<hr />
+{% endblock %}

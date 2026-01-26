@@ -1,0 +1,16 @@
+{% extends "workout_journal\base.html" %} {% block title %}{{podopieczny.imie }}
+{{ podopieczny.nazwisko }}{% endblock %} {% block content %}
+<p>podopieczny: {{podopieczny.imie }} {{podopieczny.nazwisko }}</p>
+<p>Płeć: {{podopieczny.plec}}</p>
+<p>Data dodania: {{podopieczny.data_dodania }}</p>
+<form method="post">
+  {% csrf_token %}
+  <button
+    type="submit"
+    onclick="return confirm('Czy na pewno chcesz usunąć tego trenera?');"
+  >
+    Usuń osobę
+  </button>
+</form>
+<hr />
+{% endblock %}

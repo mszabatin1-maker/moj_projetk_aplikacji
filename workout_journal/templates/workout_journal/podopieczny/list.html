@@ -1,0 +1,8 @@
+{% extends "workout_journal\base.html" %} {% block title %}Lista obiektów
+Podopieczny{% endblock %} {% block content %} Aktualnie w mojej bazie dodane są
+poniższe obiekty Podopieczny. {% for podopieczny in podopieczni %}
+<p>Podopieczny: {{ podopieczny.imie }} {{ podopieczny.nazwisko }}</p>
+<p>Data dodania: {{ podopieczny.data_dodania }}</p>
+<p>Płeć: {{podopieczny.plec}}</p>
+<hr />
+{% endfor %} {% endblock %}

@@ -1,0 +1,23 @@
+{% load static %}
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/workout_journal.css' %}" />
+  </head>
+  <body>
+    <div class="page">
+      <header id="header">Pierwsza aplikacja Django</header>
+
+      <div class="layout">
+        <main id="content">{% block content %} {% endblock %}</main>
+
+        <aside id="sidebar">
+          <p>Panel boczny</p>
+        </aside>
+      </div>
+    </div>
+  </body>
+</html>

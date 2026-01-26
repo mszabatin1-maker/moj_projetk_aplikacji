@@ -1,0 +1,8 @@
+{% extends "workout_journal\base.html" %} {% block title %}Lista obiektów
+Trener{% endblock %} {% block content %} Aktualnie w mojej bazie dodane są
+poniższe obiekty Trener. {% for trener in trenerzy %}
+<p>Trener: {{ trener.imie }} {{ trener.nazwisko }}</p>
+<p>Data dodania: {{ trener.data_dodania }}</p>
+<p>Specjalizacja: {{trener.specjalizacja}}</p>
+<hr />
+{% endfor %} {% endblock %}
