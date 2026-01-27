@@ -1,28 +1,30 @@
 /* workout_journal.css */
 
-/* ---- Reset + baza ---- */
+/* -----------------------------
+   RESET + ZMIENNE
+------------------------------ */
 * {
   box-sizing: border-box;
 }
 
 :root {
   --bg: #0b1220;
-  --panel: rgba(255, 255, 255, 0.08);
-  --panel-strong: rgba(255, 255, 255, 0.12);
   --text: #e8eefc;
-  --muted: rgba(232, 238, 252, 0.7);
+  --muted: rgba(232, 238, 252, 0.72);
+
+  --panel: rgba(255, 255, 255, 0.08);
+  --panel2: rgba(255, 255, 255, 0.1);
   --border: rgba(255, 255, 255, 0.14);
 
   --primary: #7c5cff;
-  --primary-2: #22c55e;
-
   --danger: #ef4444;
 
   --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
   --radius: 16px;
 
-  --gap: 16px;
-  --max: 1050px;
+  --max: 1100px;
+  --formMax: 520px;
+
   --font:
     system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
     "Helvetica Neue", Arial;
@@ -37,7 +39,7 @@ body {
   margin: 0;
   font-family: var(--font);
   color: var(--text);
-  line-height: 1.5;
+  line-height: 1.55;
   background:
     radial-gradient(
       900px 450px at 15% 10%,
@@ -57,64 +59,81 @@ body {
     var(--bg);
 }
 
-/* ---- Układ strony ---- */
-.container {
+/* -----------------------------
+   LINKI / HR
+------------------------------ */
+a {
+  color: rgba(232, 238, 252, 0.95);
+}
+a:hover {
+  color: #fff;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin: 14px 0;
+}
+
+/* -----------------------------
+   LAYOUT OGÓLNY
+   (działa nawet jeśli masz tylko #header/#content/#sidebar)
+------------------------------ */
+#header {
   max-width: var(--max);
-  margin: 0 auto;
-  padding: 28px 18px;
-}
-
-.page {
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 18px;
-  align-items: start;
-}
-
-@media (max-width: 920px) {
-  .page {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ---- Nagłówek ---- */
-header.site-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap);
-  margin-bottom: 18px;
-  padding: 16px 18px;
+  margin: 18px auto 0 auto;
+  padding: 14px 18px;
   border: 1px solid var(--border);
   background: var(--panel);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
-}
-
-header.site-header .brand {
-  font-weight: 750;
+  font-weight: 800;
   letter-spacing: 0.2px;
-  font-size: 18px;
+  text-align: center;
 }
 
-header.site-header nav a {
-  color: var(--text);
-  text-decoration: none;
-  opacity: 0.9;
-  padding: 8px 10px;
-  border-radius: 10px;
-  transition: 0.2s ease;
-  border: 1px solid transparent;
+/* Kontener dla content+sidebar */
+#content,
+#sidebar {
+  max-width: var(--max);
+  margin: 18px auto;
 }
 
-header.site-header nav a:hover {
-  opacity: 1;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
+/* Zróbmy grid: content + sidebar */
+body > #content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 18px;
+  align-items: start;
+  padding: 0 18px 28px 18px;
 }
 
-/* ---- Karty / sekcje ---- */
+/* Jeśli masz sidebar jako osobny div po content — dopasuj */
+#sidebar {
+  padding: 0 18px 28px 18px;
+}
+
+/* Jeżeli w base.html masz #content a potem #sidebar,
+   to i tak sidebar będzie wyglądał jak panel */
+#sidebar {
+  position: sticky;
+  top: 18px;
+}
+
+/* Mobile: jedna kolumna */
+@media (max-width: 920px) {
+  body > #content {
+    grid-template-columns: 1fr;
+  }
+  #sidebar {
+    position: static;
+  }
+}
+
+/* -----------------------------
+   KARTY / PANELE
+------------------------------ */
 .card {
   border: 1px solid var(--border);
   background: var(--panel);
@@ -124,51 +143,29 @@ header.site-header nav a:hover {
   backdrop-filter: blur(10px);
 }
 
-.card + .card {
-  margin-top: 14px;
-}
-
 .card h1,
 .card h2,
 .card h3 {
-  margin: 0 0 10px 0;
-  line-height: 1.2;
+  margin: 0 0 12px 0;
+  line-height: 1.15;
 }
 
-.card .subtle {
+.subtle {
   color: var(--muted);
 }
 
-/* ---- Sidebar ---- */
-.sidebar {
-  position: sticky;
-  top: 18px;
+/* Sidebar jako karta */
+#sidebar {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
 }
 
-.sidebar .card {
-  padding: 16px;
-}
-
-.sidebar a {
-  display: block;
-  color: var(--text);
-  text-decoration: none;
-  opacity: 0.9;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  margin-bottom: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  transition: 0.2s ease;
-}
-
-.sidebar a:hover {
-  opacity: 1;
-  border-color: rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-/* ---- Listy obiektów (Trener/Podopieczny/Ćwiczenie) ---- */
+/* -----------------------------
+   LISTY (pod sobą + czytelnie)
+------------------------------ */
 .list {
   display: grid;
   gap: 12px;
@@ -187,29 +184,39 @@ header.site-header nav a:hover {
 }
 
 .item .title {
-  font-weight: 750;
+  font-weight: 850;
   margin-bottom: 6px;
 }
 
 .item .meta {
   color: var(--muted);
   font-size: 14px;
+  margin-top: 2px;
 }
 
-/* linki do detail */
-.item a {
-  color: var(--text);
-  text-decoration: none;
-}
-.item a:hover {
-  text-decoration: underline;
+/* -----------------------------
+   FORMULARZE (na środku, w karcie)
+------------------------------ */
+/* Jeśli strona to głównie formularz, dodaj klasę .form-page w template:
+   <div class="form-page"><div class="card form-card">...</div></div>
+   Ale nawet bez tego będzie ok.
+*/
+.form-page {
+  grid-column: 1 / -1; /* zajmuje całą szerokość grida */
+  display: flex;
+  justify-content: center;
 }
 
-/* ---- Formularze ---- */
+.form-card {
+  width: min(100%, var(--formMax));
+}
+
+/* Jeśli nie użyjesz .form-page/.form-card — wycentrujemy formy automatycznie */
 form {
   margin-top: 10px;
 }
 
+/* Label */
 label {
   display: block;
   margin: 12px 0 6px 0;
@@ -217,6 +224,7 @@ label {
   font-size: 14px;
 }
 
+/* Inputy */
 input[type="text"],
 input[type="number"],
 select,
@@ -243,11 +251,15 @@ textarea:focus {
   box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.15);
 }
 
+/* Multi select czytelniej */
 select[multiple] {
-  min-height: 120px;
+  min-height: 140px;
+  padding: 10px;
 }
 
-/* ---- Przyciski ---- */
+/* -----------------------------
+   PRZYCISKI
+------------------------------ */
 button,
 .btn {
   display: inline-flex;
@@ -258,17 +270,18 @@ button,
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(124, 92, 255, 0.95);
-  color: white;
-  font-weight: 700;
+  color: #fff;
+  font-weight: 800;
   cursor: pointer;
   transition: 0.2s ease;
   text-decoration: none;
+  margin-top: 14px;
 }
 
 button:hover,
 .btn:hover {
   transform: translateY(-1px);
-  filter: brightness(1.05);
+  filter: brightness(1.06);
 }
 
 button:active,
@@ -276,21 +289,14 @@ button:active,
   transform: translateY(0);
 }
 
-.btn.secondary {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text);
-}
-
-.btn.success {
-  background: rgba(34, 197, 94, 0.95);
-}
-
 .btn.danger,
 button.danger {
   background: rgba(239, 68, 68, 0.95);
 }
 
-/* ---- Alerty / błędy ---- */
+/* -----------------------------
+   ALERTY / BŁĘDY
+------------------------------ */
 .alert {
   padding: 12px 14px;
   border-radius: 12px;
@@ -304,40 +310,18 @@ button.danger {
   background: rgba(239, 68, 68, 0.12);
 }
 
-/* ---- Tabele (gdybyś używał) ---- */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  overflow: hidden;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+/* -----------------------------
+   POMOCNICZE – ŻEBY TEKST NIE BYŁ „W JEDNEJ LINII”
+------------------------------ */
+p {
+  margin: 8px 0;
 }
-
-th,
-td {
-  padding: 10px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: left;
+h1 {
+  font-size: 32px;
 }
-
-th {
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 700;
-  background: rgba(255, 255, 255, 0.06);
+h2 {
+  font-size: 22px;
 }
-
-/* ---- Małe poprawki ---- */
-hr {
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  margin: 14px 0;
-}
-
-a {
-  color: rgba(232, 238, 252, 0.95);
-}
-
 .small {
   font-size: 13px;
   color: var(--muted);

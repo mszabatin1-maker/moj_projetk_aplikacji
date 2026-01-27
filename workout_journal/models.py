@@ -26,9 +26,9 @@ class Trener(models.Model):
 
 class Podopieczny(models.Model):
     PLEC_WYBOR = (
-        ("K", "kobieta"),
-        ("M", "mezczyzna"),
-        ("I", "inna")
+        ("1", "kobieta"),
+        ("2", "mezczyzna"),
+        ("3", "inna")
     )
     imie = models.CharField(max_length=50, blank = False, null = False)
     nazwisko = models.CharField(max_length=100, blank = False, null = False)

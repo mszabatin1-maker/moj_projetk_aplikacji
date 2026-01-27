@@ -126,7 +126,7 @@ def podopieczny_create_html(request):
         imie = request.POST.get('imie')
         nazwisko = request.POST.get('nazwisko')
         plec = request.POST.get('plec')
-        trener_id = request.POST.getlist('trener')
+        trener_id = request.POST.get('trener')
 
         if imie and nazwisko and plec and trener_id:
             try:
@@ -184,7 +184,7 @@ def cwiczenie_create_html(request):
         opis_cwiczenia = request.POST.get('opis_cwiczenia')
         ilosc_powtorzen = request.POST.get('ilosc_powtorzen')
         ilosc_serii = request.POST.get('ilosc_serii')
-        planTreningowy_id = request.POST.getlist("planTreningowy")
+        planTreningowy_id = request.POST.get("planTreningowy")
         
         
         if nazwa and planTreningowy_id:
@@ -199,7 +199,6 @@ def cwiczenie_create_html(request):
                 opis_cwiczenia = opis_cwiczenia,
                 ilosc_powtorzen = ilosc_powtorzen,
                 ilosc_serii = ilosc_serii,
-                planTreningowy = planTreningowy_obj
             )
             return redirect('cwiczenie-list')
         else:

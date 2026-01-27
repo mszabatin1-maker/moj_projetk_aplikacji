@@ -15,16 +15,16 @@ podopiecznego{% endblock %} {% block content %}
   <input type="text" id="nazwisko" name="nazwisko" /><br /><br />
 
   <label for="plec">Płeć:</label>
-  <select id="plec" name="plec">
+  <select id="plec" name="plec" required>
     <option value="">-- wybierz --</option>
-    <option value="M">Mężczyzna</option>
-    <option value="K">Kobieta</option>
-    <option value="I">Inna</option>
+    <option value="1">Mężczyzna</option>
+    <option value="2">Kobieta</option>
+    <option value="3">Inna</option>
   </select>
   <br /><br />
 
   <label for="trener">Trener:</label>
-  <select id="trener" name="trener" multiple>
+  <select id="trener" name="trener">
     {% for t in trenerzy %}
     <option value="{{ t.id }}">
       {{ t.imie }} {{t.nazwisko}}: {{t.specjalizacja}}
