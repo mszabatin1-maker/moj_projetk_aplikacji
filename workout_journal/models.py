@@ -36,6 +36,7 @@ class Podopieczny(models.Model):
     trener = models.ForeignKey(Trener, null = True, blank = True, on_delete = models.SET_NULL)
     plan_treningowy = models.ManyToManyField('PlanTreningowy')
     data_dodania = models.DateField(auto_now_add = True, editable = False)
+    wlasciciel = models.ForeignKey(User, on_delete = models.SET_NULL, null = True, default = 1)
 
     def __str__(self):
         return f"Podopieczny: {self.imie} {self.nazwisko}"

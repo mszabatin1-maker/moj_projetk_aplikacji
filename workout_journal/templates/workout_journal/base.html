@@ -6,18 +6,22 @@
     <title>{% block title %}{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/workout_journal.css' %}" />
-  </head>
-  <body>
-    <div class="page">
-      <header id="header">Pierwsza aplikacja Django</header>
-
-      <div class="layout">
-        <main id="content">{% block content %} {% endblock %}</main>
-
-        <aside id="sidebar">
-          <p>Panel boczny</p>
-        </aside>
-      </div>
-    </div>
-  </body>
+    <body>
+        <div id="header">
+            Pierwsza aplikacja Django
+            {% if request.session.token %}
+                Witaj, {{ request.user.username }}!
+                <a href="{% url 'user-logout' %}">Wyloguj</a>
+            {% else %}
+                <a href="{% url 'user-login' %}">Zaloguj</a>
+            {% endif %}
+        </div>
+        <hr/>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+        <div id="sidebar">
+            <p>Panel boczny</p>
+        </div>
+    </body>
 </html>
