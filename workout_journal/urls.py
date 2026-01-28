@@ -7,7 +7,8 @@ urlpatterns = [
     path('token/logout/', views.drf_token_logout, name='drf-token-logout'),
     path('login/', views.user_login, name='user-login'),
     path('logout/', views.user_logout, name='user-logout'),
-
+    
+    path("podopieczni/", views.podopieczny_list),
     path("html/podopieczni/wlasciciel/", views.podopieczny_list_owner, name = "podopieczny-list-owner"),
     path("podopieczni/<int:pk>/edytuj/", views.podopieczny_update, name = "podopieczny-update-drf"),
     path("podopieczni/<int:pk>/usun/", views.podopieczny_delete, name = "podopieczny-delete-drf"),
