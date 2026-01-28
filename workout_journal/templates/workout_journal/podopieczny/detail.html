@@ -7,10 +7,11 @@
   {% csrf_token %}
   <button
     type="submit"
-    onclick="return confirm('Czy na pewno chcesz usunąć tego trenera?');"
+    onclick="return confirm('Czy na pewno chcesz usunąć tę osobę?');"
   >
     Usuń osobę
   </button>
 </form>
+{% endif %}
 <hr />
 {% endblock %}

@@ -1,0 +1,10 @@
+{% extends "workout_journal\base.html" %} {% block title %}Dodaj nowego
+podopiecznego{% endblock %} {% block content %}
+<h1>Dodaj nowego podopiecznego</h1>
+
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Zapisz</button>
+</form>
+<hr />
+{% endblock %}

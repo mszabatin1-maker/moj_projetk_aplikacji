@@ -3,14 +3,18 @@ from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.response import Response
 from .models import Trener, Podopieczny, Specjalizacja, Cwiczenie, PlanTreningowy
 from .serializers import TrenerSerializer, PodopiecznySerializer, SpecjalizacjaSerializer
+from .forms import PodopiecznyForm
+from django.core.exceptions import PermissionDenied
 
 
 @api_view(['GET', 'POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def trener_list(request):
     if request.method == 'GET':
         trenerzy = Trener.objects.all()
@@ -114,6 +118,8 @@ def podopieczny_delete(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 @api_view(["GET"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def podopieczny_list(request):
     if request.method == "GET":
         return Response(PodopiecznySerializer(Podopieczny.objects.all(),
@@ -121,6 +127,8 @@ def podopieczny_list(request):
                         status = status.HTTP_200_OK)
     
 @api_view(["GET"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def podopieczny_name_filter_url(request, name):
     if request.method == "GET":
         return Response(PodopiecznySerializer(Podopieczny.objects.filter(nazwisko__icontains = name),
@@ -128,9 +136,10 @@ def podopieczny_name_filter_url(request, name):
                         status = status.HTTP_200_OK)
 
 @api_view(["GET"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def podopieczny_name_filter_params(request):
     if request.method == "GET":
-        # Pobranie parametru 'name' z query params
         name = request.query_params.get('name', None)
         if name is not None:
             return Response(PodopiecznySerializer(Podopieczny.objects.filter(nazwisko__icontains = name),
@@ -140,6 +149,8 @@ def podopieczny_name_filter_params(request):
             return Response({"error": "Parametr 'name' jest wymagany."}, status=status.HTTP_400_BAD_REQUEST)
         
 @api_view(["GET","POST","DELETE"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def specjalizacja_detail(request, pk):
     try:
         specjalizacja = Specjalizacja.objects.get(pk=pk)
@@ -162,12 +173,60 @@ def specjalizacja_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 @api_view(["GET"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def specjalizacja_list(request):
     if request.method == "GET":
         return Response(SpecjalizacjaSerializer(Specjalizacja.objects.all(),
                                         many = True).data,
                         status = status.HTTP_200_OK)
     
+
+
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveDestroyAPIView, CreateAPIView, ListAPIView
+from rest_framework.views import APIView
+
+class TrenerListView(ListCreateAPIView):
+    queryset = Trener.objects.all()
+    seriazlier_class = TrenerSerializer
+
+class TrenerDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Trener.objects.all()
+    serializer_class = TrenerSerializer
+
+class PodopiecznyDetailAPIView(RetrieveDestroyAPIView, CreateAPIView):
+    queryset = Podopieczny.objects.all()
+    serializer_class = PodopiecznySerializer
+
+class PodopiecznySearchAPIView(ListAPIView):
+    serializer_class = PodopiecznySerializer
+
+    def get_queryset(self):
+        name = self.kwargs.get('name', None)
+        if name:
+            return Podopieczny.objects.filter(nazwisko__icontains=name)
+        return Podopieczny.objects.none()  
+    
+class PodopiecznyNameFilterView(APIView):
+    def get(self, request):
+        name = request.query_params.get('name', None)
+
+        if name:
+            podopieczni = Podopieczny.objects.filter(nazwisko__icontains=name)
+            serializer = PodopiecznySerializer(podopieczni, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Parametr 'name' jest wymagany."}, status=status.HTTP_400_BAD_REQUEST)  
+
+class SpecjalizacjaDetailAPIView(RetrieveDestroyAPIView, CreateAPIView):
+    queryset = Specjalizacja.objects.all()
+    serializer_class = SpecjalizacjaSerializer
+
+
+class SpecjalizacjaListAPIView(ListAPIView):
+    queryset = Specjalizacja.objects.all()
+    serializer_class = SpecjalizacjaSerializer
+
 
 from rest_framework.authtoken.models import Token
 
@@ -239,6 +298,25 @@ def trener_specjalizacja(request, pk):
         return render(request,
                 "workout_journal/trener/list.html",
                 {'trenerzy': trenerzy})
+
+@login_required(login_url='user-login')
+def podopieczny_view(request, pk):
+    if not request.user.has_perm('workout_journal.view_podopieczny'):
+        raise PermissionDenied()
+    try:
+        podopieczny = Podopieczny.objects.get(pk=pk)
+        return HttpResponse(f"Ten użytkownik nazywa się {podopieczny.imie} {podopieczny.nazwisko}")
+    except Podopieczny.DoesNotExist:
+        return HttpResponse(f"W bazie nie ma użytkownika o id={pk}.")
+
+@login_required(login_url='user-login')
+@permission_required('workout_journal.view_podopieczny', raise_exception=True)
+def podopieczny_view_decorator(request, pk):
+    try:
+        podopieczny = Podopieczny.objects.get(pk=pk)
+        return HttpResponse(f"Ten użytkownik nazywa się {podopieczny.imie} {podopieczny.nazwisko}")
+    except Podopieczny.DoesNotExist:
+        return HttpResponse(f"W bazie nie ma użytkownika o id={pk}.")
 
 
 
@@ -382,6 +460,19 @@ def podopieczny_create_html(request):
         else:
             error = "wszystkie pola są wymagane."
             return render(request, "workout_journal/podopieczny/create.html", {'error': error, 'trenerzy' : trenerzy})
+        
+def podopieczny_create_django_form(request):
+    if request.method == "POST":
+        form = PodopiecznyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('podopieczny-list')  
+    else:
+        form = PodopiecznyForm()
+
+    return render(request,
+                  "workout_journal/podopieczny/create_django.html",
+                  {'form': form})
         
 def cwiczenie_list_html(request):
     cwiczenia = Cwiczenie.objects.all()

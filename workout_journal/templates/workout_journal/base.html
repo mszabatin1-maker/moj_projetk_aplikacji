@@ -9,7 +9,7 @@
     <body>
         <div id="header">
             Pierwsza aplikacja Django
-            {% if request.session.token %}
+            {% if request.user.is_authenticated %}
                 Witaj, {{ request.user.username }}!
                 <a href="{% url 'user-logout' %}">Wyloguj</a>
             {% else %}

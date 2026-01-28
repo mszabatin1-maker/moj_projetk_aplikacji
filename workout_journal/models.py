@@ -42,7 +42,9 @@ class Podopieczny(models.Model):
         return f"Podopieczny: {self.imie} {self.nazwisko}"
     
     class Meta: 
-        ordering = ['nazwisko']
+        permissions = [
+        ("change_podopieczny_owner", "Pozwala przypisać inną osobę do obiektu Podopieczny."),
+        ]
 
 class Cwiczenie(models.Model):
     nazwa = models.CharField(max_length = 70, blank = False, null = False)
